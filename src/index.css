@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ivory: #FAF6EE;
+  --color-ivory-deep: #F2EBDA;
+  --color-bark: #2B2118;
+  --color-olive: #3F4B30;
+  --color-olive-light: #5C6B45;
+  --color-olive-pale: #8A9678;
+  --color-gold: #8A6E3C;
+  --color-gold-light: #B89456;
+  --color-terracotta: #C9603A;
+  --color-beige: #E8DFC8;
+  --color-beige-deep: #DCCFAE;
+  --color-cream-line: #D8CCB0;
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-script: 'Caveat', cursive;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-ivory);
+  color: var(--color-bark);
+  overflow-x: hidden;
+}
+
+.font-display { font-family: var(--font-display); }
+.font-script  { font-family: var(--font-script); }
+
+::selection { background-color: var(--color-terracotta); color: var(--color-ivory); }
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--color-ivory-deep); }
+::-webkit-scrollbar-thumb { background: var(--color-olive-pale); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-olive); }
+
+a:focus-visible, button:focus-visible, input:focus-visible,
+textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.noise-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
