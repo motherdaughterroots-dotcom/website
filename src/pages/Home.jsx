@@ -11,9 +11,9 @@ import CategoryIconCard from '../components/CategoryIconCard';
 import { products, categories } from '../data/products';
 
 // Unsplash CDN — free, no attribution needed for display
-const HERO_BG = 'https://images.openai.com/static-rsc-4/Lv-yMdq9rKtnI5QO_9vOkvITwo9Val05KtKurBGOHZYJZHOwgeKHI7ifWiTtmLO6B0yiKES1xb7iEG8Pq8gHsXwpue_FO1BfeVXq_75DJhFGkqqMsSvPb1XEu-O_qe3m-9EYMF4BXAtdKiy-0S88LaV17udjxCdBzdYEt5aA0Jzgn1U0QswDhXdYJSVG1cnX?purpose=fullsize';
+// const HERO_BG = 'https://images.openai.com/static-rsc-4/Lv-yMdq9rKtnI5QO_9vOkvITwo9Val05KtKurBGOHZYJZHOwgeKHI7ifWiTtmLO6B0yiKES1xb7iEG8Pq8gHsXwpue_FO1BfeVXq_75DJhFGkqqMsSvPb1XEu-O_qe3m-9EYMF4BXAtdKiy-0S88LaV17udjxCdBzdYEt5aA0Jzgn1U0QswDhXdYJSVG1cnX?purpose=fullsize';
 
-// const HERO_BG = 'images/brand/hero.png'
+const HERO_BG = 'images/brand/final_korean.png'
 const WHY = [
   { icon: Sprout,       title: 'Handmade',          desc: 'Every batch crafted by hand — never mass-produced.' },
   { icon: Leaf,         title: 'Herbal Ingredients', desc: 'Real turmeric, neem, amla — not diluted extracts.' },

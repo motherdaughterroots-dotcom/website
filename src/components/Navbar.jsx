@@ -40,7 +40,7 @@ export default function Navbar() {
           <img src="/images/brand/logo.png" alt="Mother Daughter Roots"
             className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover ring-1 ring-[var(--color-gold)]/30 transition-transform duration-500 group-hover:scale-105" />
           <div className="hidden sm:flex flex-col leading-tight">
-            <span className="font-display text-[16px] font-medium text-[var(--color-olive)]">Mother Daughter Roots</span>
+            <span className="font-display text-[16px] font-medium text-[var(--color-dark)]">Mother Daughter Roots</span>
             <span className="font-script text-[var(--color-terracotta)] text-[13px] -mt-0.5">Rooted in love</span>
           </div>
         </Link>
