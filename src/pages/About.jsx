@@ -48,7 +48,7 @@ export default function About() {
           <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: '-80px' }} transition={{ duration: 0.65 }}
             className="relative flex justify-center">
-            <img src="/images/brand/logo.png" alt="Mother Daughter Roots"
+            <img src="/images/brand/logo2.png" alt="Mother Daughter Roots"
               className="w-72 sm:w-96 rounded-full shadow-2xl shadow-[var(--color-bark)]/12" />
             <div className="absolute -bottom-4 -right-4 bg-[var(--color-beige)] rounded-2xl px-5 py-3 shadow-lg hidden sm:block">
               <p className="font-script text-2xl text-[var(--color-terracotta)]">Rooted in Love</p>

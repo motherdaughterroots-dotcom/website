@@ -11,7 +11,7 @@ export const products = [
   {
     id: 'ubtan-glow-bathing-bar', name: 'Ubtan Glow Bathing Bar',
     category: 'body-care', subcategory: 'Body Care',
-    tagline: 'Natural glow & tan care.', price: 999, netQty: '100 gm',
+    tagline: 'Natural glow & tan care.', price: 299, netQty: '100 gm',
     image: '/images/products/ubtan-soap.jpeg',
     images: [
       '/images/products/ubtan-soap.jpeg',
@@ -30,7 +30,7 @@ export const products = [
   {
     id: 'charcoal-detox-bathing-bar', name: 'Charcoal Detox Bathing Bar',
     category: 'body-care', subcategory: 'Body Care',
-    tagline: 'Deep cleanse & purify.', price: 999, netQty: '100 gm',
+    tagline: 'Deep cleanse & purify.', price: 299, netQty: '100 gm',
     image: '/images/products/charcoal-soap.jpeg',
     images: [
       '/images/products/charcoal-soap.jpeg',
@@ -49,7 +49,7 @@ export const products = [
   {
     id: 'coffee-exfoliating-spa-bar', name: 'Coffee Exfoliating Spa Bathing Bar',
     category: 'body-care', subcategory: 'Body Care',
-    tagline: 'Exfoliate. Nourish. Revitalize.', price: 999, netQty: '100 gm',
+    tagline: 'Exfoliate. Nourish. Revitalize.', price: 299, netQty: '100 gm',
     image: '/images/products/coffee-soap.jpeg',
     images: [
       '/images/products/coffee-soap.jpeg',
@@ -68,7 +68,7 @@ export const products = [
   {
     id: 'botanical-hair-growth-oil', name: 'Botanical Strength Herbal Hair Growth Oil',
     category: 'hair-care', subcategory: 'Hair Oils',
-    tagline: 'Strong roots, healthy hair.', price: 999, netQty: '100 ml',
+    tagline: 'Strong roots, healthy hair.', price: 399, netQty: '100 ml',
     image: '/images/products/hair-oil.jpeg',
     images: [
       '/images/products/hair-oil.jpeg',
@@ -87,7 +87,7 @@ export const products = [
   {
     id: 'cold-pressed-coconut-oil', name: 'Cold Pressed Virgin Coconut Oil',
     category: 'herbal-essentials', subcategory: 'Herbal Essentials',
-    tagline: 'Pure care from nature for your everyday glow.', price: 599, netQty: '100 ml',
+    tagline: 'Pure care from nature for your everyday glow.', price: 499, netQty: '100 ml',
     image: '/images/products/coconut-oil.jpeg',
     images: [
       '/images/products/coconut-oil.jpeg',
@@ -106,7 +106,7 @@ export const products = [
   {
     id: 'banana-powder', name: 'Banana Powder (Unripe)',
     category: 'face-care', subcategory: 'Face Care',
-    tagline: '100% pure & natural.', price: 449, netQty: '500 g',
+    tagline: '100% pure & natural.', price: 249, netQty: '500 g',
     image: '/images/products/banana-powder.jpeg',
     images: [
       '/images/products/banana-powder.jpeg',
@@ -124,7 +124,7 @@ export const products = [
   {
     id: 'beetroot-powder', name: 'Beetroot Powder',
     category: 'face-care', subcategory: 'Face Care',
-    tagline: '100% pure & natural.', price: 449, netQty: '500 g',
+    tagline: '100% pure & natural.', price: 249, netQty: '500 g',
     image: '/images/products/beetroot-powder.jpeg',
     images: [
       '/images/products/beetroot-powder.jpeg',
@@ -142,7 +142,7 @@ export const products = [
   {
     id: 'orange-peel-powder', name: 'Orange Peel Powder',
     category: 'face-care', subcategory: 'Face Care',
-    tagline: '100% pure & natural.', price: 449, netQty: '500 g',
+    tagline: '100% pure & natural.', price: 249, netQty: '500 g',
     image: '/images/products/orange-peel-powder.jpeg',
     images: [
       '/images/products/orange-peel-powder.jpeg',
@@ -160,7 +160,7 @@ export const products = [
   {
     id: 'papaya-unripe-powder', name: 'Papaya Unripe Powder',
     category: 'face-care', subcategory: 'Face Care',
-    tagline: '100% pure & natural.', price: 449, netQty: '500 g',
+    tagline: '100% pure & natural.', price: 249, netQty: '500 g',
     image: '/images/products/papaya-unripe-powder.jpeg',
     images: [
       '/images/products/papaya-unripe-powder.jpeg',
@@ -178,7 +178,7 @@ export const products = [
   {
     id: 'papaya-leaves-powder', name: 'Papaya Leaves Powder',
     category: 'face-care', subcategory: 'Face Care',
-    tagline: '100% pure & natural.', price: 449, netQty: '500 g',
+    tagline: '100% pure & natural.', price: 249, netQty: '500 g',
     image: '/images/products/papaya-leaves-powder.jpeg',
     images: [
       '/images/products/papaya-leaves-powder.jpeg',

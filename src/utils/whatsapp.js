@@ -1,6 +1,35 @@
+// export const WHATSAPP_NUMBER = '916304460957';
+
+// export function buildOrderMessage(items, customerName = '') {
+//   const lines = [
+//     'Hello Mother Daughter Roots! 🌿',
+//     'I would like to place an order:',
+//     '',
+//     ...items.map(i => `• ${i.name} (${i.netQty}) × ${i.qty} — ₹${i.price * i.qty}`),
+//     '',
+//     `Total Items: ${items.reduce((s, i) => s + i.qty, 0)}`,
+//     `Estimated Total: ₹${items.reduce((s, i) => s + i.qty * i.price, 0)}`,
+//     '',
+//     customerName ? `Customer Name: ${customerName}` : 'Customer Name: _______',
+//     '',
+//     'Please confirm availability. Thank you! 💚',
+//   ];
+//   return lines.join('\n');
+// }
+
+// export function getWhatsAppOrderLink(items, customerName = '') {
+//   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildOrderMessage(items, customerName))}`;
+// }
+
+// export function getWhatsAppGeneralLink(msg = 'Hi! I had a question about your products.') {
+//   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+// }
+
 export const WHATSAPP_NUMBER = '916304460957';
 
-export function buildOrderMessage(items, customerName = '') {
+export function buildOrderMessage(items, customerName = '', customerLocation = '', discountedTotal = null, totalSaved = 0) {
+  const originalTotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+
   const lines = [
     'Hello Mother Daughter Roots! 🌿',
     'I would like to place an order:',
@@ -8,17 +37,28 @@ export function buildOrderMessage(items, customerName = '') {
     ...items.map(i => `• ${i.name} (${i.netQty}) × ${i.qty} — ₹${i.price * i.qty}`),
     '',
     `Total Items: ${items.reduce((s, i) => s + i.qty, 0)}`,
-    `Estimated Total: ₹${items.reduce((s, i) => s + i.qty * i.price, 0)}`,
-    '',
-    customerName ? `Customer Name: ${customerName}` : 'Customer Name: _______',
-    '',
-    'Please confirm availability. Thank you! 💚',
   ];
+
+  if (totalSaved > 0 && discountedTotal !== null) {
+    lines.push(`Original Total: ₹${originalTotal}`);
+    lines.push(`Bulk Discount (15% off): -₹${totalSaved} 🎉`);
+    lines.push(`Final Total: ₹${discountedTotal}`);
+  } else {
+    lines.push(`Total: ₹${originalTotal}`);
+  }
+
+  lines.push('');
+  lines.push(customerName ? `Customer Name: ${customerName}` : 'Customer Name: _______');
+  lines.push(customerLocation ? `Location: ${customerLocation}` : 'Location: _______');
+  lines.push('');
+  lines.push('Please confirm availability. Thank you! 💚');
   return lines.join('\n');
 }
 
-export function getWhatsAppOrderLink(items, customerName = '') {
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildOrderMessage(items, customerName))}`;
+export function getWhatsAppOrderLink(items, customerName = '', customerLocation = '', discountedTotal = null, totalSaved = 0) {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+    buildOrderMessage(items, customerName, customerLocation, discountedTotal, totalSaved)
+  )}`;
 }
 
 export function getWhatsAppGeneralLink(msg = 'Hi! I had a question about your products.') {
