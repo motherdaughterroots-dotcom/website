@@ -106,7 +106,7 @@ import { X, Minus, Plus, Trash2, MessageCircle, ShoppingBag, Tag } from 'lucide-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart, getItemDiscount, getDiscountedPrice, getItemTotal } from '../context/CartContext';
-import { getWhatsAppOrderLink } from '../utils/whatsapp';
+import { getWhatsAppOrderLink, isInternationalCustomer } from '../utils/whatsapp';
 
 export default function CartDrawer() {
   const {
@@ -116,17 +116,20 @@ export default function CartDrawer() {
   } = useCart();
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
+  const [country, setCountry] = useState('India');
 
   const customerName = name.trim();
   const customerLocation = location.trim();
-  const isOrderReady = customerName.length > 0 && customerLocation.length > 0;
+  const customerCountry = country.trim();
+  const isOrderReady = customerName.length > 0 && customerLocation.length > 0 && customerCountry.length > 0;
+  const isInternational = isInternationalCustomer(customerCountry);
 
   const handleOrderSubmit = (event) => {
     event.preventDefault();
     if (!isOrderReady) return;
 
     window.open(
-      getWhatsAppOrderLink(items, customerName, customerLocation, subtotal, totalSaved),
+      getWhatsAppOrderLink(items, customerName, customerLocation, customerCountry, subtotal, totalSaved),
       '_blank',
       'noopener,noreferrer'
     );
@@ -293,6 +296,18 @@ export default function CartDrawer() {
                       aria-label="Customer location"
                       className="w-full px-4 py-3 rounded-xl border border-[var(--color-cream-line)] bg-white text-sm placeholder:text-[var(--color-bark)]/35 focus:outline-none focus:border-[var(--color-terracotta)] transition-colors"
                     />
+                    <input
+                      type="text"
+                      value={country}
+                      onChange={e => setCountry(e.target.value)}
+                      placeholder="Country *"
+                      required
+                      aria-label="Customer country"
+                      className="w-full px-4 py-3 rounded-xl border border-[var(--color-cream-line)] bg-white text-sm placeholder:text-[var(--color-bark)]/35 focus:outline-none focus:border-[var(--color-terracotta)] transition-colors"
+                    />
+                    {isInternational && (
+                      <p className="text-xs leading-relaxed text-[var(--color-olive)]/70">International order: we’ll confirm shipping charges and payment methods on WhatsApp.</p>
+                    )}
                     <button
                       type="submit"
                       disabled={!isOrderReady}

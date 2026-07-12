@@ -27,8 +27,28 @@
 
 export const WHATSAPP_NUMBER = '916304460957';
 
-export function buildOrderMessage(items, customerName = '', customerLocation = '', discountedTotal = null, totalSaved = 0) {
+export function isInternationalCustomer(country = '') {
+  return country.trim().toLowerCase() !== 'india';
+}
+
+export function buildOrderMessage(items, customerName = '', customerLocation = '', customerCountry = '', discountedTotal = null, totalSaved = 0) {
   const originalTotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+
+  if (isInternationalCustomer(customerCountry)) {
+    return [
+      'Hello Mother Daughter Roots!',
+      'I would like to place an international order.',
+      '',
+      ...items.map(i => `- ${i.name} (${i.netQty}) x ${i.qty}`),
+      '',
+      `Total Items: ${items.reduce((s, i) => s + i.qty, 0)}`,
+      `Customer Name: ${customerName}`,
+      `Country: ${customerCountry}`,
+      `Delivery Location: ${customerLocation}`,
+      '',
+      'Please share international shipping charges and available payment methods. Thank you!',
+    ].join('\n');
+  }
 
   const lines = [
     'Hello Mother Daughter Roots! 🌿',
@@ -49,15 +69,16 @@ export function buildOrderMessage(items, customerName = '', customerLocation = '
 
   lines.push('');
   lines.push(customerName ? `Customer Name: ${customerName}` : 'Customer Name: _______');
+  lines.push(customerCountry ? `Country: ${customerCountry}` : 'Country: _______');
   lines.push(customerLocation ? `Location: ${customerLocation}` : 'Location: _______');
   lines.push('');
   lines.push('Please confirm availability. Thank you! 💚');
   return lines.join('\n');
 }
 
-export function getWhatsAppOrderLink(items, customerName = '', customerLocation = '', discountedTotal = null, totalSaved = 0) {
+export function getWhatsAppOrderLink(items, customerName = '', customerLocation = '', customerCountry = '', discountedTotal = null, totalSaved = 0) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    buildOrderMessage(items, customerName, customerLocation, discountedTotal, totalSaved)
+    buildOrderMessage(items, customerName, customerLocation, customerCountry, discountedTotal, totalSaved)
   )}`;
 }
 

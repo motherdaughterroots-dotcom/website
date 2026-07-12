@@ -11,6 +11,7 @@ const FAQS = [
     items: [
       { q: 'How do I place an order?', a: 'Add products to your basket, then click "Order on WhatsApp". Your full order summary will be pre-filled in WhatsApp — just send it and we\'ll confirm availability and arrange delivery.' },
       { q: 'Do you ship across India?', a: 'Yes! We ship pan-India. Shipping charges and timelines are confirmed via WhatsApp once you place your order.' },
+      { q: 'Can I order your products from outside India?', a: 'Yes! We ship to select countries. Please message us on WhatsApp with your country and we will confirm if we can ship there and the shipping charges.' },
       { q: 'How long does delivery take?', a: 'Typically 5–8 business days depending on your location. Express delivery options can be discussed on WhatsApp.' },
       { q: 'What payment methods do you accept?', a: 'We accept UPI, bank transfer, and cash on delivery in select areas. Payment details are shared when your order is confirmed.' },
     ],
@@ -32,6 +33,18 @@ const FAQS = [
       { q: 'What is the shelf life?', a: 'Soaps: 18–24 months. Oils: 12–24 months. Herbal powders: 12–18 months. Best-before dates are printed on each product.' },
       { q: 'Can I use the soaps on my face?', a: 'Yes — all our soaps are gentle enough for face use. The Ubtan Glow Bar is specifically popular for facial use. Always patch test first, especially for sensitive skin.' },
       { q: 'Can I use the coconut oil on my baby?', a: 'Yes. The Cold Pressed Virgin Coconut Oil is suitable for baby massage. It is 100% pure with no additives.' },
+    ],
+  },
+  {
+    category: 'Courses & Training',
+    items: [
+      { q: 'What format are the courses taught in?', a: 'Our regular courses are live, personal online training sessions on WhatsApp video call. You learn in real time with guidance at every step â€” there are no pre-recorded lessons.' },
+      { q: 'Do I need prior experience to join?', a: 'No. Our Beginner package is designed for complete newcomers. You can choose Intermediate or Premium if you already make products and would like more advanced formulation or business guidance.' },
+      { q: 'How long does a course take?', a: 'Most courses are taught over 3â€“5 days, depending on the course and your pace. Your exact schedule is confirmed personally on WhatsApp before training begins.' },
+      { q: 'Will I receive a certificate?', a: 'Yes. A certificate of completion is included with every course.' },
+      { q: 'Do you offer offline classes?', a: 'Yes. We can conduct an in-person, hands-on workshop at your preferred location when you arrange a group of 10â€“20 learners. Message us on WhatsApp to discuss the location and dates.' },
+      { q: 'Can learners outside India join?', a: 'Yes. International learners can join our online courses. Share your country and preferred time zone when you enquire; we will confirm suitable timings and available international payment methods.' },
+      { q: 'How do I enrol in a course?', a: 'Open the course you want, choose your package, enter your details, and select Enrol on WhatsApp. We will then confirm the next available training slot and payment details.' },
     ],
   },
   {
