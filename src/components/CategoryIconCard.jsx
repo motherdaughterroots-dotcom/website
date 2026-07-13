@@ -9,6 +9,12 @@ const ICON_MAP = {
   'lip-care':          Heart,      // 💋 Lip Care
   'fragrances':        Sparkles,   // 🌸 Fragrances
   'herbal-essentials': Package,    // 🌱 Herbal Essentials
+  soaps:               Droplets,
+  skincare:            Leaf,
+  haircare:            Wind,
+  cosmetics:           Sparkles,
+  powders:             Package,
+  oils:                Droplets,
 };
 
 const GRADIENT_MAP = {

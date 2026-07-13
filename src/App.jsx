@@ -58,6 +58,7 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { CartProvider } from './context/CartContext';
+import { ProductsProvider } from './context/ProductsContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
@@ -79,26 +80,28 @@ function ScrollToTop() {
 
 export default function App() {
   return (
-    <CartProvider>
-      <ScrollToTop />
-      <Navbar />
-      <CartDrawer />
-      <FloatingWhatsApp />
-      <main>
-        <Routes>
-          <Route path="/"               element={<Home />} />
-          <Route path="/shop"           element={<Shop />} />
-          <Route path="/product/:id"    element={<ProductDetail />} />
-          <Route path="/about"          element={<About />} />
-          <Route path="/contact"        element={<Contact />} />
-          <Route path="/faq"            element={<FAQ />} />
-          <Route path="/courses"        element={<Courses />} />
-          <Route path="/courses/:id"    element={<CourseDetail />} />
-          <Route path="*"               element={<NotFound />} />
-        </Routes>
-      </main>
-      <Footer />
-    </CartProvider>
+    <ProductsProvider>
+      <CartProvider>
+        <ScrollToTop />
+        <Navbar />
+        <CartDrawer />
+        <FloatingWhatsApp />
+        <main>
+          <Routes>
+            <Route path="/"               element={<Home />} />
+            <Route path="/shop"           element={<Shop />} />
+            <Route path="/product/:id"    element={<ProductDetail />} />
+            <Route path="/about"          element={<About />} />
+            <Route path="/contact"        element={<Contact />} />
+            <Route path="/faq"            element={<FAQ />} />
+            <Route path="/courses"        element={<Courses />} />
+            <Route path="/courses/:id"    element={<CourseDetail />} />
+            <Route path="*"               element={<NotFound />} />
+          </Routes>
+        </main>
+        <Footer />
+      </CartProvider>
+    </ProductsProvider>
   );
 }
 

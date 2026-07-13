@@ -191,7 +191,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ShoppingBag, MessageCircle, CheckCircle, Tag } from 'lucide-react';
 import { useState } from 'react';
-import { getProductById, products } from '../data/products';
+import { useProducts } from '../context/ProductsContext';
 import { useCart, getDiscountedPrice, getItemDiscount, getItemTotal } from '../context/CartContext';
 import { getWhatsAppGeneralLink } from '../utils/whatsapp';
 import ProductCard from '../components/ProductCard';
@@ -235,12 +235,21 @@ export default function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { items, addItem } = useCart();
+  const { products, getProductById, loading } = useProducts();
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const [toast, setToast] = useState({ message: '', variant: 'success' });
   const product = getProductById(id);
 
   usePageTitle(product ? `${product.name} — Mother Daughter Roots` : 'Product — Mother Daughter Roots');
+
+  if (loading) {
+    return (
+      <div className="pt-40 text-center text-[var(--color-bark)]/50">
+        Loading product…
+      </div>
+    );
+  }
 
   if (!product) return (
     <div className="pt-40 text-center">
@@ -302,6 +311,7 @@ export default function ProductDetail() {
             <ProductGallery
               images={product.images}
               videoUrl={product.videoUrl}
+              videoType={product.videoType}
               productName={product.name}
             />
           </motion.div>
@@ -349,7 +359,7 @@ export default function ProductDetail() {
             <div className="mb-7">
               <h2 className="font-display text-lg text-[var(--color-bark)] mb-3">Key Benefits</h2>
               <ul className="space-y-2">
-                {product.benefits.map(b => (
+                {(product.benefits || []).map(b => (
                   <li key={b} className="flex items-start gap-2.5 text-sm text-[var(--color-bark)]/70">
                     <CheckCircle size={15} className="text-[var(--color-olive)] flex-shrink-0 mt-0.5" />
                     {b}
@@ -391,7 +401,7 @@ export default function ProductDetail() {
 
             {/* Badges */}
             <div className="flex flex-wrap gap-2 mb-8">
-              {product.badges.map(b => (
+              {(product.badges || []).map(b => (
                 <span key={b} className="px-3 py-1 rounded-full text-xs font-medium bg-[var(--color-olive)]/8 text-[var(--color-olive)] border border-[var(--color-olive)]/15">
                   ✓ {b}
                 </span>

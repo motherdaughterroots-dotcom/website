@@ -4,18 +4,23 @@ import { Play } from 'lucide-react';
 
 /**
  * Multi-image + video gallery.
- * The video appears as a thumbnail in the strip.
- * Clicking it replaces the main image with the YouTube embed.
- *
- * @param {string[]} images       - Array of image paths (≥1).
- * @param {string}   videoUrl     - YouTube embed URL.
- * @param {string}   [productName] - Used as alt text on images.
+ * Supports YouTube embed URLs and direct video files (mp4 from Supabase storage).
  */
-export default function ProductGallery({ images, videoUrl, productName = 'Product image' }) {
-  // Items = all images + optionally a video entry at the end
+export default function ProductGallery({
+  images = [],
+  videoUrl,
+  videoType,
+  productName = 'Product image',
+}) {
+  const resolvedType = videoType || (
+    videoUrl
+      ? (/youtube\.com\/embed|youtu\.be/i.test(videoUrl) ? 'youtube' : 'file')
+      : null
+  );
+
   const items = [
-    ...images.map((src) => ({ type: 'image', src })),
-    ...(videoUrl ? [{ type: 'video', src: videoUrl }] : []),
+    ...images.filter(Boolean).map((src) => ({ type: 'image', src })),
+    ...(videoUrl ? [{ type: 'video', src: videoUrl, videoType: resolvedType }] : []),
   ];
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -26,8 +31,6 @@ export default function ProductGallery({ images, videoUrl, productName = 'Produc
 
   return (
     <div className="flex flex-col gap-3">
-
-      {/* ── Main viewer ── */}
       <div className="relative aspect-square rounded-3xl overflow-hidden bg-[#E8DFC8]">
         <AnimatePresence mode="sync">
           {selected.type === 'image' ? (
@@ -41,9 +44,9 @@ export default function ProductGallery({ images, videoUrl, productName = 'Produc
               transition={{ duration: 0.3 }}
               className="w-full h-full object-cover"
             />
-          ) : (
+          ) : selected.videoType === 'youtube' ? (
             <motion.div
-              key="video"
+              key="video-yt"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -51,7 +54,7 @@ export default function ProductGallery({ images, videoUrl, productName = 'Produc
               className="w-full h-full"
             >
               <iframe
-                src={`${selected.src}?autoplay=1`}
+                src={`${selected.src}${selected.src.includes('?') ? '&' : '?'}autoplay=1`}
                 title="Product video"
                 allowFullScreen
                 loading="lazy"
@@ -59,11 +62,29 @@ export default function ProductGallery({ images, videoUrl, productName = 'Produc
                 className="w-full h-full rounded-3xl"
               />
             </motion.div>
+          ) : (
+            <motion.div
+              key="video-file"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="w-full h-full"
+            >
+              <video
+                src={selected.src}
+                controls
+                autoPlay
+                playsInline
+                className="w-full h-full object-cover rounded-3xl bg-black"
+              >
+                Your browser does not support the video tag.
+              </video>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* ── Thumbnail strip (hidden when only 1 item total) ── */}
       {items.length > 1 && (
         <div
           className="flex gap-2 overflow-x-auto no-scrollbar pb-1"
@@ -89,7 +110,6 @@ export default function ProductGallery({ images, videoUrl, productName = 'Produc
                   className="w-full h-full object-cover"
                 />
               ) : (
-                /* Video thumbnail — play icon overlay */
                 <div className="w-full h-full flex items-center justify-center bg-[#2B2118]/80">
                   <div className="w-7 h-7 rounded-full bg-white/90 flex items-center justify-center">
                     <Play size={13} className="text-[#C9603A] ml-0.5" fill="#C9603A" />

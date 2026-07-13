@@ -626,7 +626,7 @@ import ProductCard from '../components/ProductCard';
 import RootDivider from '../components/RootDivider';
 import LearnWithUs from '../components/LearnWithUs';
 import CategoryIconCard from '../components/CategoryIconCard';
-import { products, categories } from '../data/products';
+import { useProducts } from '../context/ProductsContext';
 
 // const HERO_BG = 'https://images.openai.com/static-rsc-4/Lv-yMdq9rKtnI5QO_9vOkvITwo9Val05KtKurBGOHZYJZHOwgeKHI7ifWiTtmLO6B0yiKES1xb7iEG8Pq8gHsXwpue_FO1BfeVXq_75DJhFGkqqMsSvPb1XEu-O_qe3m-9EYMF4BXAtdKiy-0S88LaV17udjxCdBzdYEt5aA0Jzgn1U0QswDhXdYJSVG1cnX?purpose=fullsize';
 const HERO_BG = 'images/brand/final_russian.webp';
@@ -644,13 +644,16 @@ const TESTIMONIALS = [
   { name: 'Mariam A.',  rating: 5, text: 'The orange peel powder is genuinely fresh and smells incredible. So gentle on sensitive skin. Nothing else compares.' },
 ];
 
-const HERO_CARDS = [
-  { img: '/images/products/banana-powder.jpeg',   name: 'Banana Powder',      sub: '100% Organic · 500g',    price: '₹449' },
-  { img: '/images/products/beetroot-powder.jpeg', name: 'Beetroot Powder',    sub: 'Natural Pigment · 500g', price: '₹449' },
-  { img: '/images/products/charcoal-soap.jpeg',   name: 'Charcoal Detox Bar', sub: 'Deep Cleanse · 100gm',   price: '₹999', pos: 'object-top' },
-];
-
 export default function Home() {
+  const { products, categories, featured, loading } = useProducts();
+  const bestSellers = (featured.length ? featured : products).slice(0, 5);
+  const heroCards = bestSellers.slice(0, 3).map(p => ({
+    img: p.image,
+    name: p.name,
+    sub: p.tagline || p.netQty,
+    price: `₹${p.price}`,
+  }));
+
   return (
     <div>
       {/* ── HERO ─────────────────────────────────────────────────────── */}
@@ -720,23 +723,25 @@ export default function Home() {
           </motion.div>
 
           {/* Floating cards — desktop only */}
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.85, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="hidden lg:flex flex-col gap-4 items-end pb-4">
-            {HERO_CARDS.map((card, i) => (
-              <motion.div key={card.name} whileHover={{ y: -4, scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 flex items-center gap-3 w-[280px]">
-                <img src={card.img} alt={card.name} loading="lazy" decoding="async"
-                  className={`w-14 h-14 rounded-xl object-cover flex-shrink-0 ${card.pos || ''}`} />
-                <div>
-                  <p className="text-white font-medium text-sm">{card.name}</p>
-                  <p className="text-white/55 text-xs">{card.sub}</p>
-                  <p className="text-[var(--color-gold-light)] font-display text-sm mt-0.5">{card.price}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+          {heroCards.length > 0 && (
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.85, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="hidden lg:flex flex-col gap-4 items-end pb-4">
+              {heroCards.map((card) => (
+                <motion.div key={card.name} whileHover={{ y: -4, scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
+                  className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 flex items-center gap-3 w-[280px]">
+                  <img src={card.img} alt={card.name} loading="lazy" decoding="async"
+                    className="w-14 h-14 rounded-xl object-cover flex-shrink-0" />
+                  <div>
+                    <p className="text-white font-medium text-sm">{card.name}</p>
+                    <p className="text-white/55 text-xs line-clamp-1">{card.sub}</p>
+                    <p className="text-[var(--color-gold-light)] font-display text-sm mt-0.5">{card.price}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
         </div>
 
         {/* Wave divider */}
@@ -751,15 +756,17 @@ export default function Home() {
       <RootDivider />
 
       {/* ── CATEGORIES ───────────────────────────────────────────────── */}
-      <section className="py-16 sm:py-24 lg:py-28 px-6 sm:px-8 max-w-7xl mx-auto">
-        <SectionHeading eyebrow="Browse by ritual" title="Find your herbal essential"
-          subtitle="From daily cleansing to deep hair therapy — every category rooted in tradition." />
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {categories.map((cat, i) => (
-            <CategoryIconCard key={cat.id} category={cat} index={i} />
-          ))}
-        </div>
-      </section>
+      {categories.length > 0 && (
+        <section className="py-16 sm:py-24 lg:py-28 px-6 sm:px-8 max-w-7xl mx-auto">
+          <SectionHeading eyebrow="Browse by ritual" title="Find your herbal essential"
+            subtitle="From daily cleansing to deep hair therapy — every category rooted in tradition." />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {categories.map((cat, i) => (
+              <CategoryIconCard key={cat.id} category={cat} index={i} />
+            ))}
+          </div>
+        </section>
+      )}
 
       <RootDivider flip />
 
@@ -767,11 +774,19 @@ export default function Home() {
       <section className="py-16 sm:py-24 lg:py-28 px-6 sm:px-8 max-w-7xl mx-auto">
         <SectionHeading eyebrow="Loved by our community" title="Best sellers"
           subtitle="The handmade staples our customers keep coming back for." />
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
-          {products.slice(0, 5).map((p, i) => (
-            <ProductCard key={p.id} product={p} index={i} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="py-16 text-center text-[var(--color-bark)]/50">Loading products…</div>
+        ) : bestSellers.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+            {bestSellers.map((p, i) => (
+              <ProductCard key={p.id} product={p} index={i} />
+            ))}
+          </div>
+        ) : (
+          <div className="py-16 text-center text-[var(--color-bark)]/50">
+            No products yet — add some from the admin panel.
+          </div>
+        )}
         <div className="flex justify-center mt-10 sm:mt-12">
           <Link to="/shop"
             className="inline-flex items-center gap-2 px-7 py-3 rounded-full border border-[var(--color-olive)]/30 text-[var(--color-olive)] font-medium hover:bg-[var(--color-olive)] hover:text-white transition-all duration-300">
@@ -869,19 +884,21 @@ export default function Home() {
       <section className="py-16 sm:py-24 lg:py-28 px-6 sm:px-8 max-w-7xl mx-auto">
         <SectionHeading eyebrow="@motherdaughterroots" title="From our collection"
           subtitle="Behind-the-scenes soap making, new launches, and herbal tips — all on Instagram." />
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-4">
-          {products.slice(0, 5).map(p => (
-            <a key={p.id} href="https://www.instagram.com/motherdaughterroots"
-              target="_blank" rel="noopener noreferrer"
-              className="group relative aspect-square rounded-xl overflow-hidden block">
-              <img src={p.image} alt="" loading="lazy" decoding="async"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-              <div className="absolute inset-0 bg-[var(--color-bark)]/0 group-hover:bg-[var(--color-bark)]/45 transition-colors duration-300 flex items-center justify-center">
-                <Instagram size={20} className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </div>
-            </a>
-          ))}
-        </div>
+        {bestSellers.length > 0 && (
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-4">
+            {bestSellers.map(p => (
+              <a key={p.id} href="https://www.instagram.com/motherdaughterroots"
+                target="_blank" rel="noopener noreferrer"
+                className="group relative aspect-square rounded-xl overflow-hidden block">
+                <img src={p.image} alt="" loading="lazy" decoding="async"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-[var(--color-bark)]/0 group-hover:bg-[var(--color-bark)]/45 transition-colors duration-300 flex items-center justify-center">
+                  <Instagram size={20} className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
         <div className="flex justify-center mt-6 sm:mt-7">
           <a href="https://www.instagram.com/motherdaughterroots" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-[var(--color-olive)] font-medium hover:text-[var(--color-terracotta)] transition-colors text-sm sm:text-base">
