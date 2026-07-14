@@ -627,6 +627,7 @@ import RootDivider from '../components/RootDivider';
 import LearnWithUs from '../components/LearnWithUs';
 import CategoryIconCard from '../components/CategoryIconCard';
 import { useProducts } from '../context/ProductsContext';
+// import { label } from '../admin/constants/productCategories'
 
 // const HERO_BG = 'https://images.openai.com/static-rsc-4/Lv-yMdq9rKtnI5QO_9vOkvITwo9Val05KtKurBGOHZYJZHOwgeKHI7ifWiTtmLO6B0yiKES1xb7iEG8Pq8gHsXwpue_FO1BfeVXq_75DJhFGkqqMsSvPb1XEu-O_qe3m-9EYMF4BXAtdKiy-0S88LaV17udjxCdBzdYEt5aA0Jzgn1U0QswDhXdYJSVG1cnX?purpose=fullsize';
 const HERO_BG = 'images/brand/final_russian.webp';

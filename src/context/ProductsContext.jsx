@@ -4,6 +4,8 @@ import {
   categoriesFromProducts,
 } from '../lib/productsApi';
 
+import { PRODUCT_CATEGORIES } from '../admin/constants/productCategories';
+
 const ProductsContext = createContext(null);
 
 export function ProductsProvider({ children }) {
@@ -35,7 +37,15 @@ export function ProductsProvider({ children }) {
   }, []);
 
   const value = useMemo(() => {
-    const categories = categoriesFromProducts(products);
+    // const categories = categoriesFromProducts(products);
+    const categories = PRODUCT_CATEGORIES.map(category => ({
+      id: category.id,
+      name: category.label,
+      emoji: category.emoji,
+      productCount: products.filter(
+        p => p.category === category.id
+      ).length,
+    }));
     const getProductById = (id) => products.find(p => p.id === id);
     const featured = products.filter(p => p.isFeatured);
     return {
