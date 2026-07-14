@@ -55,7 +55,7 @@
 
 
 // src/App.jsx
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { CartProvider } from './context/CartContext';
 import { ProductsProvider } from './context/ProductsContext';
@@ -71,6 +71,10 @@ import Contact from './pages/Contact';
 import FAQ from './pages/FAQ';
 import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
+import AdminLogin from './admin/pages/AdminLogin';
+import AdminProducts from './admin/pages/AdminProducts';
+import AdminProductEdit from './admin/pages/AdminProductEdit';
+import ProtectedRoute from './admin/components/ProtectedRoute';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -79,6 +83,21 @@ function ScrollToTop() {
 }
 
 export default function App() {
+  const { pathname } = useLocation();
+  const isAdmin = pathname.startsWith('/admin');
+
+  if (isAdmin) {
+    return (
+      <Routes>
+        <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/products" element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
+        <Route path="/admin/products/:id" element={<ProtectedRoute><AdminProductEdit /></ProtectedRoute>} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    )
+  }
+
   return (
     <ProductsProvider>
       <CartProvider>
