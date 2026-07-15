@@ -5,7 +5,7 @@ import { Lock, Mail, Eye, EyeOff, Leaf } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 
 export default function AdminLogin() {
-  const [email, setEmail]       = useState('admin@mdr.com')
+  const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
   const [showPw, setShowPw]     = useState(false)
   const [error, setError]       = useState('')
@@ -64,7 +64,7 @@ export default function AdminLogin() {
                   type="email" required value={email}
                   onChange={e => setEmail(e.target.value)}
                   className="w-full pl-9 pr-4 py-3 rounded-xl border border-[var(--color-cream-line)] text-sm focus:outline-none focus:border-[var(--color-terracotta)] transition-colors"
-                  placeholder="admin@mdr.com"
+                  placeholder="Enter your email"
                 />
               </div>
             </div>

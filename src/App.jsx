@@ -74,6 +74,7 @@ import CourseDetail from './pages/CourseDetail';
 import AdminLogin from './admin/pages/AdminLogin';
 import AdminProducts from './admin/pages/AdminProducts';
 import AdminProductEdit from './admin/pages/AdminProductEdit';
+import AdminChangePassword from './admin/pages/AdminChangePassword';
 import ProtectedRoute from './admin/components/ProtectedRoute';
 
 function ScrollToTop() {
@@ -93,6 +94,7 @@ export default function App() {
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/products" element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
         <Route path="/admin/products/:id" element={<ProtectedRoute><AdminProductEdit /></ProtectedRoute>} />
+        <Route path="/admin/change-password" element={<ProtectedRoute><AdminChangePassword /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     )
