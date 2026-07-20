@@ -14,6 +14,7 @@ export const CATEGORY_META = {
   cosmetics:           { name: 'Cosmetics',        emoji: '💄' },
   powders:             { name: 'Powders',          emoji: '🪴' },
   oils:                { name: 'Oils',             emoji: '🫒' },
+  combos:              { name: 'Combos',           emoji: '🎁' },
 };
 
 function titleCase(id = '') {
@@ -77,6 +78,7 @@ export function mapProduct(row, media = [], benefits = [], ingredients = []) {
   const image = images[0] || '/images/brand/logo.png';
 
   return {
+    kind: 'product',
     id: row.id,
     name: row.name,
     category: row.category,

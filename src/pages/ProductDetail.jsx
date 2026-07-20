@@ -279,6 +279,10 @@ export default function ProductDetail() {
   };
 
   const related        = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
+  const isCombo        = product.kind === 'combo';
+  const comboSavings   = isCombo && product.originalTotal > product.price
+    ? product.originalTotal - product.price
+    : 0;
   const discountPct    = getItemDiscount(qty);
   const discountedUnit = getDiscountedPrice(product.price, qty);
   const lineTotal      = getItemTotal(product.price, qty);
@@ -324,18 +328,34 @@ export default function ProductDetail() {
             <h1 className="font-display text-3xl sm:text-4xl text-[var(--color-bark)] leading-tight mb-2">{product.name}</h1>
             <p className="font-script text-xl text-[var(--color-terracotta)] mb-4">{product.tagline}</p>
 
-            {/* ── Bulk discount offer banner (always visible) ── */}
-            <div className="mb-5 p-3.5 rounded-2xl bg-[var(--color-terracotta)]/8 border border-[var(--color-terracotta)]/20 flex items-start gap-2.5">
-              <Tag size={15} className="text-[var(--color-terracotta)] flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-semibold text-[var(--color-terracotta)]">
-                  🎉 Buy 3 or more — get 15% off!
-                </p>
-                <p className="text-xs text-[var(--color-terracotta)]/70 mt-0.5">
-                  Discount applies automatically when you add 3+ to basket
-                </p>
+            {/* Offer banner */}
+            {isCombo ? (
+              comboSavings > 0 && (
+                <div className="mb-5 p-3.5 rounded-2xl bg-[var(--color-olive)]/8 border border-[var(--color-olive)]/20 flex items-start gap-2.5">
+                  <Tag size={15} className="text-[var(--color-olive)] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-semibold text-[var(--color-olive)]">
+                      Combo savings — save ₹{comboSavings}
+                    </p>
+                    <p className="text-xs text-[var(--color-olive)]/70 mt-0.5">
+                      Individual total ₹{product.originalTotal} · Combo price ₹{product.price}
+                    </p>
+                  </div>
+                </div>
+              )
+            ) : (
+              <div className="mb-5 p-3.5 rounded-2xl bg-[var(--color-terracotta)]/8 border border-[var(--color-terracotta)]/20 flex items-start gap-2.5">
+                <Tag size={15} className="text-[var(--color-terracotta)] flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-[var(--color-terracotta)]">
+                    🎉 Buy 3 or more — get 15% off!
+                  </p>
+                  <p className="text-xs text-[var(--color-terracotta)]/70 mt-0.5">
+                    Discount applies automatically when you add 3+ to basket
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Price — updates live as qty changes */}
             <div className="flex items-baseline gap-3 mb-6">
@@ -355,18 +375,38 @@ export default function ProductDetail() {
 
             <p className="text-[var(--color-bark)]/65 leading-relaxed mb-7">{product.description}</p>
 
+            {isCombo && product.comboItems?.length > 0 && (
+              <div className="mb-7">
+                <h2 className="font-display text-lg text-[var(--color-bark)] mb-3">This combo includes</h2>
+                <div className="space-y-3">
+                  {product.comboItems.map((item) => (
+                    <div key={item.productId} className="flex items-center gap-3 p-3 rounded-2xl bg-[var(--color-beige)]/50 border border-[var(--color-cream-line)]">
+                      <img src={item.image} alt="" className="w-14 h-14 rounded-xl object-cover bg-white" />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm text-[var(--color-bark)] line-clamp-1">{item.name}</p>
+                        <p className="text-xs text-[var(--color-bark)]/50">{item.netQty} · Qty {item.quantity}</p>
+                      </div>
+                      <span className="text-sm font-display text-[var(--color-olive)]">₹{item.price}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Benefits */}
-            <div className="mb-7">
-              <h2 className="font-display text-lg text-[var(--color-bark)] mb-3">Key Benefits</h2>
-              <ul className="space-y-2">
-                {(product.benefits || []).map(b => (
-                  <li key={b} className="flex items-start gap-2.5 text-sm text-[var(--color-bark)]/70">
-                    <CheckCircle size={15} className="text-[var(--color-olive)] flex-shrink-0 mt-0.5" />
-                    {b}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {!isCombo && (product.benefits || []).length > 0 && (
+              <div className="mb-7">
+                <h2 className="font-display text-lg text-[var(--color-bark)] mb-3">Key Benefits</h2>
+                <ul className="space-y-2">
+                  {product.benefits.map(b => (
+                    <li key={b} className="flex items-start gap-2.5 text-sm text-[var(--color-bark)]/70">
+                      <CheckCircle size={15} className="text-[var(--color-olive)] flex-shrink-0 mt-0.5" />
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* Ingredients */}
             {product.keyIngredients?.length > 0 && (
@@ -393,11 +433,13 @@ export default function ProductDetail() {
             )}
 
             {/* How to use */}
-            <div className="mb-8">
-              <h2 className="font-display text-base text-[var(--color-bark)] mb-2">How to Use</h2>
-              <p className="text-sm text-[var(--color-bark)]/65 leading-relaxed">{product.howToUse}</p>
-              <p className="text-xs text-[var(--color-bark)]/45 mt-2">Suitable for: {product.suitableFor}</p>
-            </div>
+            {!isCombo && product.howToUse && (
+              <div className="mb-8">
+                <h2 className="font-display text-base text-[var(--color-bark)] mb-2">How to Use</h2>
+                <p className="text-sm text-[var(--color-bark)]/65 leading-relaxed">{product.howToUse}</p>
+                <p className="text-xs text-[var(--color-bark)]/45 mt-2">Suitable for: {product.suitableFor}</p>
+              </div>
+            )}
 
             {/* Badges */}
             <div className="flex flex-wrap gap-2 mb-8">

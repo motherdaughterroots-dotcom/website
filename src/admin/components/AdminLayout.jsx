@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Package, KeyRound, LogOut, Menu, X, ExternalLink } from 'lucide-react'
+import { Package, KeyRound, LogOut, Menu, X, ExternalLink, Layers } from 'lucide-react'
+import { Package, LogOut, Menu, X, ExternalLink, Layers } from 'lucide-react'
 import { useAdminAuth } from '../../hooks/useAdminAuth'
 
 const navLinks = [
   { to: '/admin/products', icon: Package, label: 'Products' },
   { to: '/admin/change-password', icon: KeyRound, label: 'Change Password' },
+  { to: '/admin/combos', icon: Layers, label: 'Combos' },
 ]
 
 export default function AdminLayout({ children }) {

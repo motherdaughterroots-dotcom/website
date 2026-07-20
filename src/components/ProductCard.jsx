@@ -116,11 +116,18 @@ export default function ProductCard({ product, index = 0 }) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bark)]/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-          {/* Discount badge — top left, always visible */}
-          <div className="absolute top-2.5 left-2.5 flex items-center gap-1 px-2 py-1 rounded-full bg-[var(--color-terracotta)] text-white text-[10px] font-bold shadow-md">
-            <Tag size={9} />
-            Buy 3+ · 15% OFF
-          </div>
+          {/* Badge */}
+          {product.kind === 'combo' ? (
+            <div className="absolute top-2.5 left-2.5 flex items-center gap-1 px-2 py-1 rounded-full bg-[var(--color-olive)] text-white text-[10px] font-bold shadow-md">
+              <Tag size={9} />
+              Combo Pack
+            </div>
+          ) : (
+            <div className="absolute top-2.5 left-2.5 flex items-center gap-1 px-2 py-1 rounded-full bg-[var(--color-terracotta)] text-white text-[10px] font-bold shadow-md">
+              <Tag size={9} />
+              Buy 3+ · 15% OFF
+            </div>
+          )}
 
           {/* Add to cart button */}
           <button

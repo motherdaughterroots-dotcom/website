@@ -31,6 +31,7 @@ export default function Shop() {
   const visible = products.filter(p => {
     const matchCat = active === 'all' || p.category === active;
     const matchSearch = !search || p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.tagline?.toLowerCase().includes(search.toLowerCase()) ||
       p.keyIngredients?.some(k => k.toLowerCase().includes(search.toLowerCase()));
     return matchCat && matchSearch;
   });
