@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Package, KeyRound, LogOut, Menu, X, ExternalLink, Layers } from 'lucide-react'
-import { Package, LogOut, Menu, X, ExternalLink, Layers } from 'lucide-react'
 import { useAdminAuth } from '../../hooks/useAdminAuth'
 
 const navLinks = [

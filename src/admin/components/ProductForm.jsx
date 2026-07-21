@@ -12,7 +12,7 @@ import Toggle from './Toggle'
 import AdminToast from './AdminToast'
 
 const EMPTY_FORM = {
-  name: '', category: 'soaps', tagline: '', price: '',
+  name: '', category: 'face-care', tagline: '', price: '',
   net_qty: '', description: '', how_to_use: '', suitable_for: '',
   discount_percent: 0, sort_order: 0,
   is_in_stock: true, is_featured: false,
@@ -112,7 +112,7 @@ export default function ProductForm({ productId = null }) {
 
         setForm({
           name: product.name || '',
-          category: product.category || 'soaps',
+          category: product.category || 'face-care',
           tagline: product.tagline || '',
           price: product.price || '',
           net_qty: product.net_qty || '',
