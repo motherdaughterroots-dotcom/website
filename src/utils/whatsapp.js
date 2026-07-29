@@ -1,30 +1,3 @@
-// export const WHATSAPP_NUMBER = '916304460957';
-
-// export function buildOrderMessage(items, customerName = '') {
-//   const lines = [
-//     'Hello Mother Daughter Roots! 🌿',
-//     'I would like to place an order:',
-//     '',
-//     ...items.map(i => `• ${i.name} (${i.netQty}) × ${i.qty} — ₹${i.price * i.qty}`),
-//     '',
-//     `Total Items: ${items.reduce((s, i) => s + i.qty, 0)}`,
-//     `Estimated Total: ₹${items.reduce((s, i) => s + i.qty * i.price, 0)}`,
-//     '',
-//     customerName ? `Customer Name: ${customerName}` : 'Customer Name: _______',
-//     '',
-//     'Please confirm availability. Thank you! 💚',
-//   ];
-//   return lines.join('\n');
-// }
-
-// export function getWhatsAppOrderLink(items, customerName = '') {
-//   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildOrderMessage(items, customerName))}`;
-// }
-
-// export function getWhatsAppGeneralLink(msg = 'Hi! I had a question about your products.') {
-//   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-// }
-
 export const WHATSAPP_NUMBER = '916304460957';
 
 export function isInternationalCustomer(country = '') {
@@ -50,14 +23,30 @@ export function buildOrderMessage(items, customerName = '', customerLocation = '
     ].join('\n');
   }
 
+  const comboSavings = items.reduce((sum, i) => {
+    if (i.kind === 'combo' && i.discountPercent > 0 && i.comboOriginalUnitPrice) {
+      return sum + (i.comboOriginalUnitPrice - i.price) * i.qty;
+    }
+    return sum;
+  }, 0);
+
   const lines = [
     'Hello Mother Daughter Roots! 🌿',
     'I would like to place an order:',
     '',
-    ...items.map(i => `• ${i.name} (${i.netQty}) × ${i.qty} — ₹${i.price * i.qty}`),
+    ...items.map(i => {
+      const comboNote = i.kind === 'combo' && i.discountPercent > 0
+        ? ` (Combo Discount ${i.discountPercent}% off)`
+        : '';
+      return `• ${i.name} (${i.netQty}) × ${i.qty} — ₹${i.price * i.qty}${comboNote}`;
+    }),
     '',
     `Total Items: ${items.reduce((s, i) => s + i.qty, 0)}`,
   ];
+
+  if (comboSavings > 0) {
+    lines.push(`Combo Savings: ₹${comboSavings} 🎁`);
+  }
 
   if (totalSaved > 0 && discountedTotal !== null) {
     lines.push(`Original Total: ₹${originalTotal}`);

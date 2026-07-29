@@ -11,6 +11,7 @@ const EMPTY_FORM = {
   tagline: '',
   description: '',
   price: '',
+  discount_percent: 0,
   sort_order: 0,
   is_in_stock: true,
   is_featured: false,
@@ -106,7 +107,9 @@ export default function ComboForm({ comboId = null }) {
           name: combo.name || '',
           tagline: combo.tagline || '',
           description: combo.description || '',
-          price: combo.price || '',
+          // price: combo.price || '',
+          price: computedPrice,
+          discount_percent: combo.discount_percent || 0,
           sort_order: combo.sort_order || 0,
           is_in_stock: combo.is_in_stock ?? true,
           is_featured: combo.is_featured ?? false,
@@ -151,10 +154,18 @@ export default function ComboForm({ comboId = null }) {
     return sum + (Number(product?.price) || 0) * item.quantity
   }, 0)
 
+  const enteredPrice = Number(form.price) || 0
+  const discountPercent = suggestedTotal > 0 && enteredPrice > 0 && enteredPrice < suggestedTotal
+    ? Math.round(((suggestedTotal - enteredPrice) / suggestedTotal) * 100)
+    : 0
+  const computedSavings = suggestedTotal > 0 ? Math.max(0, suggestedTotal - enteredPrice) : 0
+  const computedPrice = Math.round(suggestedTotal * (1 - (Number(form.discount_percent) || 0) / 100))
+
   const handleSave = async (e) => {
     e.preventDefault()
     if (!form.name.trim()) { showToast('error', 'Combo name is required'); return }
-    if (!form.price || Number(form.price) <= 0) { showToast('error', 'Combo price must be greater than 0'); return }
+    if (computedPrice <= 0) { showToast('error', 'Combo price must be greater than 0'); return }
+    // if (!form.price || Number(form.price) <= 0) { showToast('error', 'Combo price must be greater than 0'); return }
     if (selectedItems.length < 2) { showToast('error', 'Add at least 2 products to create a combo'); return }
 
     setSaving(true)
@@ -166,7 +177,9 @@ export default function ComboForm({ comboId = null }) {
         name: form.name.trim(),
         tagline: form.tagline.trim(),
         description: form.description.trim(),
-        price: Number(form.price),
+        // price: Number(form.price),
+        price: computedPrice,
+        discount_percent: Number(form.discount_percent) || 0,
         sort_order: Number(form.sort_order) || 0,
         is_in_stock: form.is_in_stock,
         is_featured: form.is_featured,
@@ -266,7 +279,7 @@ export default function ComboForm({ comboId = null }) {
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4">
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-[var(--color-bark)] mb-1.5">Combo price (₹) *</label>
               <input
                 required
@@ -276,15 +289,42 @@ export default function ComboForm({ comboId = null }) {
                 onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
                 className="w-full px-4 py-3 rounded-xl border border-[var(--color-cream-line)] text-sm focus:outline-none focus:border-[var(--color-terracotta)]"
               />
-              {suggestedTotal > 0 && (
-                <p className="text-xs text-[var(--color-bark)]/50 mt-1.5">
-                  Individual total: ₹{suggestedTotal}
-                  {Number(form.price) > 0 && Number(form.price) < suggestedTotal
-                    ? ` · Save ₹${suggestedTotal - Number(form.price)}`
-                    : ''}
-                </p>
-              )}
+              <p className="text-xs text-[var(--color-bark)]/50 mt-1.5">
+                {suggestedTotal > 0 ? (
+                  <>
+                    Individual total: ₹{suggestedTotal}
+                    {Number(form.price) > 0 && Number(form.price) < suggestedTotal
+                      ? ` · Discount: ${discountPercent}% · Customer saves ₹${computedSavings}`
+                      : ''}
+                  </>
+                ) : 'Add products below to see savings.'}
+              </p>
+            </div> */}
+            <div>
+              <label className="block text-sm font-medium text-[var(--color-bark)] mb-1.5">Combo price (auto)</label>
+              <div className="w-full px-4 py-3 rounded-xl border border-[var(--color-cream-line)] text-sm bg-[var(--color-beige)]/40 text-[var(--color-bark)]">
+                ₹{computedPrice}
+              </div>
+              <p className="text-xs text-[var(--color-bark)]/50 mt-1.5">
+                {suggestedTotal > 0
+                  ? `Individual total: ₹${suggestedTotal} · Customer saves ₹${suggestedTotal - computedPrice}`
+                  : 'Add products below to see savings.'}
+              </p>
             </div>
+            <div>
+                <label className="block text-sm font-medium text-[var(--color-bark)] mb-1.5">Discount (%)</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={form.discount_percent}
+                  onChange={(e) => setForm((f) => ({ ...f, discount_percent: e.target.value }))}
+                  className="w-full px-4 py-3 rounded-xl border border-[var(--color-cream-line)] text-sm focus:outline-none focus:border-[var(--color-terracotta)]"
+                />
+                <p className="text-xs text-[var(--color-bark)]/50 mt-1.5">
+                  Shown to customers as "{form.discount_percent || 0}% OFF" on this combo.
+                </p>
+              </div>
             <div>
               <label className="block text-sm font-medium text-[var(--color-bark)] mb-1.5">Sort order</label>
               <input

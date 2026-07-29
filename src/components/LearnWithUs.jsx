@@ -1,4 +1,3 @@
-// src/components/LearnWithUs.jsx
 // Home page section — shows 3 featured courses + CTA to /courses
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';

@@ -8,12 +8,3 @@ export const PRODUCT_CATEGORIES = [
   { id: 'fragrances',        label: 'Fragrances',         emoji: '🌸' },  
   { id: 'herbal-essentials', label: 'Herbal Essentials',  emoji: '🌿' },  
 ]
-
-// export const categories = [
-//   { id: 'face-care',         label: 'Face Care',           },
-//   { id: 'body-care',         label: 'Body Care',           },
-//   { id: 'hair-care',         label: 'Hair Care',           },
-//   { id: 'lip-care',          label: 'Lip Care',            },
-//   { id: 'fragrances',        label: 'Fragrances',          },
-//   { id: 'herbal-essentials', label: 'Herbal Essentials',   },
-// ];

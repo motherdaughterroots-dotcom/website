@@ -23,6 +23,7 @@ export function mapCombo(row, items = [], productLookup = {}) {
         name: product?.name || 'Product',
         image: product?.image || '/images/brand/logo.png',
         price: product?.price || 0,
+        // price: Math.round(product?.price * (1 - (Number(product?.discount_percent) || 0) / 100)) || 0,
         netQty: product?.netQty || '',
       };
     });
@@ -30,7 +31,7 @@ export function mapCombo(row, items = [], productLookup = {}) {
   const totalItems = comboItems.reduce((sum, item) => sum + item.quantity, 0);
   const image = row.image_url || comboItems[0]?.image || '/images/brand/logo.png';
   const originalTotal = comboItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
+  // const finalPrice = Math.round(row.price * (1 - (Number(row.discount_percent) || 0) / 100))
   return {
     kind: 'combo',
     id: row.id,
@@ -39,6 +40,7 @@ export function mapCombo(row, items = [], productLookup = {}) {
     subcategory: 'Combo Pack',
     tagline: row.tagline || '',
     price: Number(row.price) || 0,
+    // price: finalPrice,
     netQty: `${totalItems} item${totalItems !== 1 ? 's' : ''}`,
     image,
     images: [image],
@@ -57,7 +59,7 @@ export function mapCombo(row, items = [], productLookup = {}) {
     ],
     isInStock: row.is_in_stock !== false,
     isFeatured: !!row.is_featured,
-    discountPercent: 0,
+    discountPercent: Number(row.discount_percent) || 0,
     sortOrder: Number(row.sort_order) || 0,
     comboItems,
     originalTotal,
