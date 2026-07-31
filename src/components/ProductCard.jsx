@@ -14,8 +14,8 @@ export default function ProductCard({ product, index = 0 }) {
     e.preventDefault();
     const currentQty = items.find(item => item.id === product.id)?.qty || 0;
     const nextQty = currentQty + 1;
-    const discountPct = getItemDiscount(nextQty);
-    const saving = product.price * nextQty - getItemTotal(product.price, nextQty);
+    const discountPct = getItemDiscount(nextQty, product.discountPercent);
+    const saving = product.price * nextQty - getItemTotal(product.price, nextQty, product.discountPercent);
 
     addItem(product);
     setToast(discountPct > 0
@@ -57,23 +57,12 @@ export default function ProductCard({ product, index = 0 }) {
               <Tag size={9} />
               {product.discountPercent > 0 ? `Combo · ${product.discountPercent}% OFF` : 'Combo Pack'}
             </div>
-          ) : (
+          ) : product.discountPercent > 0 ? (
             <div className="absolute top-2.5 left-2.5 flex items-center gap-1 px-2 py-1 rounded-full bg-[var(--color-terracotta)] text-white text-[10px] font-bold shadow-md">
               <Tag size={9} />
-              Buy 3+ · 15% OFF
+              Buy 3+ · {product.discountPercent}% OFF
             </div>
-          )}
-          {/* {product.kind === 'combo' ? (
-            <div className="absolute top-2.5 left-2.5 flex items-center gap-1 px-2 py-1 rounded-full bg-[var(--color-olive)] text-white text-[10px] font-bold shadow-md">
-              <Tag size={9} />
-              Combo Pack
-            </div>
-          ) : (
-            <div className="absolute top-2.5 left-2.5 flex items-center gap-1 px-2 py-1 rounded-full bg-[var(--color-terracotta)] text-white text-[10px] font-bold shadow-md">
-              <Tag size={9} />
-              Buy 3+ · 15% OFF
-            </div>
-          )} */}
+          ) : null}
 
           {/* Add to cart button */}
           <button

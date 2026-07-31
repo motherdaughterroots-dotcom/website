@@ -56,9 +56,9 @@ export default function CartDrawer() {
               </button>
             </div>
 
-            {/* Discount nudge banner */}
+            {/* Discount nudge banner — only shows if a non-combo item in cart actually has a discount set */}
             <AnimatePresence>
-              {items.length > 0 && items.some(i => i.kind !== 'combo') && (
+              {items.length > 0 && items.some(i => i.kind !== 'combo' && i.discountPercent > 0) && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}
@@ -68,7 +68,7 @@ export default function CartDrawer() {
                   <div className="mx-4 mt-3 px-4 py-2.5 rounded-xl bg-[var(--color-terracotta)]/8 border border-[var(--color-terracotta)]/20 flex items-center gap-2">
                     <Tag size={14} className="text-[var(--color-terracotta)] flex-shrink-0" />
                     <p className="text-xs text-[var(--color-terracotta)] font-medium">
-                      Buy 3+ of any product and get <strong>15% off</strong> that item automatically
+                      Buy 3+ of an eligible product and get <strong>its bulk discount</strong> applied automatically
                     </p>
                   </div>
                 </motion.div>
@@ -92,12 +92,9 @@ export default function CartDrawer() {
                 {/* Items */}
                 <div className="flex-1 overflow-y-auto px-6 py-4 space-y-5">
                   {items.map(item => {
-                    const discountPct = item.kind === 'combo' ? 0 : getItemDiscount(item.qty);
-                    const discountedUnit = item.kind === 'combo' ? item.price : getDiscountedPrice(item.price, item.qty);
-                    const lineTotal = item.kind === 'combo' ? item.price * item.qty : getItemTotal(item.price, item.qty);
-                    // const discountPct = getItemDiscount(item.qty);
-                    // const discountedUnit = getDiscountedPrice(item.price, item.qty);
-                    // const lineTotal = getItemTotal(item.price, item.qty);
+                    const discountPct = item.kind === 'combo' ? 0 : getItemDiscount(item.qty, item.discountPercent);
+                    const discountedUnit = item.kind === 'combo' ? item.price : getDiscountedPrice(item.price, item.qty, item.discountPercent);
+                    const lineTotal = item.kind === 'combo' ? item.price * item.qty : getItemTotal(item.price, item.qty, item.discountPercent);
 
                     return (
                       <div key={item.id} className="flex gap-4 pb-5 border-b border-[var(--color-cream-line)]/60">
@@ -109,12 +106,6 @@ export default function CartDrawer() {
                           </h3>
                           <p className="text-xs text-[var(--color-bark)]/50 mt-0.5">{item.netQty}</p>
 
-                          {/* Discount badge on item
-                          {discountPct > 0 && (
-                            <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-[var(--color-terracotta)]/10 text-[var(--color-terracotta)] text-[10px] font-semibold">
-                              <Tag size={9} /> {discountPct}% OFF applied
-                            </span>
-                          )} */}
                           {/* Discount badge on item */}
                           {discountPct > 0 && (
                             <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-[var(--color-terracotta)]/10 text-[var(--color-terracotta)] text-[10px] font-semibold">

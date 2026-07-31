@@ -11,19 +11,21 @@ import Toast from '../components/Toast';
 import { usePageTitle } from '../hooks/usePageTitle';
 
 // ── Small sub-component: live savings nudge below the qty/add button ─────────
-function SavingsNudge({ qty, price, saving, discountPct }) {
+function SavingsNudge({ qty, price, saving, discountPct, offerPct }) {
+  if (offerPct <= 0) return null;
+
   if (qty < 2) {
     return (
       <p className="text-xs text-[var(--color-bark)]/40 mb-3 text-center">
         Add <strong>{3 - qty}</strong> more to unlock{' '}
-        <strong className="text-[var(--color-terracotta)]">15% off</strong>
+        <strong className="text-[var(--color-terracotta)]">{offerPct}% off</strong>
       </p>
     );
   }
   if (qty === 2) {
     return (
       <p className="text-xs text-[var(--color-terracotta)] mb-3 text-center font-medium">
-        🔥 Add 1 more to unlock <strong>15% off</strong> — save ₹{Math.round(price * 3 * 0.15)} on 3!
+        🔥 Add 1 more to unlock <strong>{offerPct}% off</strong> — save ₹{Math.round(price * 3 * (offerPct / 100))} on 3!
       </p>
     );
   }
@@ -69,53 +71,35 @@ export default function ProductDetail() {
     </div>
   );
 
+  const isCombo = product.kind === 'combo';
+
   const handleAdd = () => {
-  const currentQty = items.find(item => item.id === product.id)?.qty || 0;
-  const nextQty = currentQty + qty;
-  const nextDiscountPct = isCombo ? 0 : getItemDiscount(nextQty);
-  const nextSaving = isCombo ? 0 : product.price * nextQty - getItemTotal(product.price, nextQty);
+    const currentQty = items.find(item => item.id === product.id)?.qty || 0;
+    const nextQty = currentQty + qty;
+    const nextDiscountPct = isCombo ? 0 : getItemDiscount(nextQty, product.discountPercent);
+    const nextSaving = isCombo ? 0 : product.price * nextQty - getItemTotal(product.price, nextQty, product.discountPercent);
 
-  addItem(product, qty);
-  setToast(nextDiscountPct > 0
-    ? {
-        message: `Congratulations! You got ${nextDiscountPct}% off and saved Rs.${nextSaving}`,
-        variant: 'discount',
-      }
-    : {
-        message: `Added ${qty > 1 ? qty + 'x ' : ''}to basket!`,
-        variant: 'success',
-      });
-  setAdded(true);
-  setTimeout(() => setAdded(false), 1800);
-};
-  // const handleAdd = () => {
-  //   const currentQty = items.find(item => item.id === product.id)?.qty || 0;
-  //   const nextQty = currentQty + qty;
-  //   const nextDiscountPct = getItemDiscount(nextQty);
-  //   const nextSaving = product.price * nextQty - getItemTotal(product.price, nextQty);
-
-  //   addItem(product, qty);
-  //   setToast(nextDiscountPct > 0
-  //     ? {
-  //         message: `Congratulations! You got ${nextDiscountPct}% off and saved Rs.${nextSaving}`,
-  //         variant: 'discount',
-  //       }
-  //     : {
-  //         message: `Added ${qty > 1 ? qty + 'x ' : ''}to basket!`,
-  //         variant: 'success',
-  //       });
-  //   setAdded(true);
-  //   setTimeout(() => setAdded(false), 1800);
-  // };
+    addItem(product, qty);
+    setToast(nextDiscountPct > 0
+      ? {
+          message: `Congratulations! You got ${nextDiscountPct}% off and saved Rs.${nextSaving}`,
+          variant: 'discount',
+        }
+      : {
+          message: `Added ${qty > 1 ? qty + 'x ' : ''}to basket!`,
+          variant: 'success',
+        });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1800);
+  };
 
   const related        = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
-  const isCombo        = product.kind === 'combo';
   const comboSavings   = isCombo && product.originalTotal > product.price
     ? product.originalTotal - product.price
     : 0;
-  const discountPct    = getItemDiscount(qty);
-  const discountedUnit = getDiscountedPrice(product.price, qty);
-  const lineTotal      = getItemTotal(product.price, qty);
+  const discountPct    = getItemDiscount(qty, product.discountPercent);
+  const discountedUnit = getDiscountedPrice(product.price, qty, product.discountPercent);
+  const lineTotal       = getItemTotal(product.price, qty, product.discountPercent);
   const originalLine   = product.price * qty;
   const saving         = originalLine - lineTotal;
 
@@ -173,12 +157,12 @@ export default function ProductDetail() {
                   </div>
                 </div>
               )
-            ) : (
+            ) : product.discountPercent > 0 && (
               <div className="mb-5 p-3.5 rounded-2xl bg-[var(--color-terracotta)]/8 border border-[var(--color-terracotta)]/20 flex items-start gap-2.5">
                 <Tag size={15} className="text-[var(--color-terracotta)] flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-semibold text-[var(--color-terracotta)]">
-                    🎉 Buy 3 or more — get 15% off!
+                    🎉 Buy 3 or more — get {product.discountPercent}% off!
                   </p>
                   <p className="text-xs text-[var(--color-terracotta)]/70 mt-0.5">
                     Discount applies automatically when you add 3+ to basket
@@ -301,7 +285,7 @@ export default function ProductDetail() {
 
             {/* Live savings nudge — changes as qty changes */}
             {!isCombo && (
-              <SavingsNudge qty={qty} price={product.price} saving={saving} discountPct={discountPct} />
+              <SavingsNudge qty={qty} price={product.price} saving={saving} discountPct={discountPct} offerPct={product.discountPercent} />
             )}
 
             <a href={getWhatsAppGeneralLink(`Hi! I'm interested in ${product.name}. Is it available?`)}

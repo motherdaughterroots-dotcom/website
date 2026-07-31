@@ -5,26 +5,23 @@ const KEY = 'mdr_cart_v1';
 
 function getLineTotal(item) {
   if (item.kind === 'combo') return item.price * item.qty; // combos already carry their own discount in price
-  return getItemTotal(item.price, item.qty);
+  return getItemTotal(item.price, item.qty, item.discountPercent || 0);
 }
 
-// ── Discount logic (easy to swap with Supabase data later) ──────────────────
-export const DISCOUNT_TIERS = [
-  { minQty: 3, percent: 15, label: 'Buy 3+ and save 15%' },
-];
+// ── Discount logic — percent now comes from each product's own admin setting ──
+const BULK_MIN_QTY = 3;
 
-export function getItemDiscount(qty) {
-  const tier = [...DISCOUNT_TIERS].reverse().find(t => qty >= t.minQty);
-  return tier ? tier.percent : 0;
+export function getItemDiscount(qty, discountPercent = 0) {
+  return qty >= BULK_MIN_QTY ? (Number(discountPercent) || 0) : 0;
 }
 
-export function getDiscountedPrice(price, qty) {
-  const pct = getItemDiscount(qty);
+export function getDiscountedPrice(price, qty, discountPercent = 0) {
+  const pct = getItemDiscount(qty, discountPercent);
   return pct > 0 ? Math.round(price * (1 - pct / 100)) : price;
 }
 
-export function getItemTotal(price, qty) {
-  return getDiscountedPrice(price, qty) * qty;
+export function getItemTotal(price, qty, discountPercent = 0) {
+  return getDiscountedPrice(price, qty, discountPercent) * qty;
 }
 // ────────────────────────────────────────────────────────────────────────────
 
@@ -54,7 +51,7 @@ export function CartProvider({ children }) {
         netQty: product.netQty,
         qty,
         kind: product.kind || 'product',
-        discountPercent: product.kind === 'combo' ? (product.discountPercent || 0) : 0,
+        discountPercent: product.discountPercent || 0,
         comboOriginalUnitPrice: product.kind === 'combo' ? (product.originalTotal || product.price) : undefined,
       }];
     });
@@ -72,13 +69,9 @@ export function CartProvider({ children }) {
 
   const totalItems = items.reduce((s, i) => s + i.qty, 0);
 
-  // subtotal now accounts for per-item discounts
-  // const subtotal = items.reduce((s, i) => s + getItemTotal(i.price, i.qty), 0);
-  
   const subtotal = items.reduce((s, i) => s + getLineTotal(i), 0);
   const originalTotal = items.reduce((s, i) => s + i.price * i.qty, 0);
   const totalSaved = originalTotal - subtotal;
-  
 
   return (
     <CartContext.Provider value={{
